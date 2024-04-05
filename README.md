@@ -1,2 +1,2 @@
-# genomics2024
+# Genomics2024
 Genomic's project 
