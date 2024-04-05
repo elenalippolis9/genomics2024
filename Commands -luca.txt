@@ -16,24 +16,30 @@ bowtie2 -U /home/BCG2022_genomics_exam/case452_child.fq.gz -p 8 -x /home/BCG2022
 nohup freebayes -f /home/BCG2022_genomics_exam/universe.fasta -m 20 -C 5 -Q 10 --min-coverage 10 case452_father.bam case452_mother.bam case452_child.bam > case452.vcf &
 
 
--Check della prima riga per verificare l'ordine con cui poi definire il pattern mendeliano
+-Check della prima riga per verificare l'ordine con cui poi definire il pattern mendeliano (da eliminare per via del prossimo passaggio)
 grep "^#CHR" case452.vcf
 
 
+-Ordina i campioni in modo da poter avere i pazienti nello stesso ordine in tutti i casi (e poter automatizzare)
+bcftools query -l case452.vcf | sort > samples.txt
+
+bcftools view -S samples.txt case452.vcf > case452.sorted.vcf
+
+
 -Conta le varianti alleliche di ogni individuo
-grep -v "#"  case452.vcf | cut -f 10 | cut -d ":" -f 1 | sort | uniq -c
+grep -v "#"  case452.sorted.vcf | cut -f 10 | cut -d ":" -f 1 | sort | uniq -c
 
-grep -v "#"  case452.vcf | cut -f 11 | cut -d ":" -f 1 | sort | uniq -c
+grep -v "#"  case452.sorted.vcf | cut -f 11 | cut -d ":" -f 1 | sort | uniq -c
 
-grep -v "#"  case452.vcf | cut -f 12 | cut -d ":" -f 1 | sort | uniq -c
+grep -v "#"  case452.sorted.vcf | cut -f 12 | cut -d ":" -f 1 | sort | uniq -c
 
 
 -Crea il nuovo file vcf con l'header
-grep "#" case452.vcf > candilist452.vcf
+grep "#" case452.sorted.vcf > candilist452.vcf
 
 
 -Aggiungi al file appena creato le varianti che rispettano il pattern mendeliano
-grep "1/1.*0/1.*0/1" case452.vcf >> candilist452.vcf
+grep "1/1.*0/1.*0/1" case452.sorted.vcf >> candilist452.vcf
 
 
 -Matcha il file con quello delle target regions (stiamo facendo un exome sequencing, valutando quindi solo i coding genes)
