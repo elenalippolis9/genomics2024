@@ -1,0 +1,83 @@
+#recessive autosomal disease
+
+-Crea cartella di lavoro per il tuo caso all'interno della directory genomics2024
+mkdir case452
+
+
+-Allineamento a genoma di riferimento e creazione dei bam file
+bowtie2 -U /home/BCG2022_genomics_exam/case452_father.fq.gz -p 8 -x /home/BCG2022_genomics_exam/uni --rg-id "SF" --rg "SM:father" | samtools view -Sb | samtools sort -o case452_father.bam
+
+bowtie2 -U /home/BCG2022_genomics_exam/case452_mother.fq.gz -p 8 -x /home/BCG2022_genomics_exam/uni --rg-id "SM" --rg "SM:mother" | samtools view -Sb | samtools sort -o case452_mother.bam
+
+bowtie2 -U /home/BCG2022_genomics_exam/case452_child.fq.gz -p 8 -x /home/BCG2022_genomics_exam/uni --rg-id "SC" --rg "SM:child" | samtools view -Sb | samtools sort -o case452_child.bam
+
+
+-Variant Calling
+nohup freebayes -f /home/BCG2022_genomics_exam/universe.fasta -m 20 -C 5 -Q 10 --min-coverage 10 case452_father.bam case452_mother.bam case452_child.bam > case452.vcf &
+
+
+-Check della prima riga per verificare l'ordine con cui poi definire il pattern mendeliano
+grep "^#CHR" case452.vcf
+
+
+-Conta le varianti alleliche di ogni individuo
+grep -v "#"  case452.vcf | cut -f 10 | cut -d ":" -f 1 | sort | uniq -c
+
+grep -v "#"  case452.vcf | cut -f 11 | cut -d ":" -f 1 | sort | uniq -c
+
+grep -v "#"  case452.vcf | cut -f 12 | cut -d ":" -f 1 | sort | uniq -c
+
+
+-Crea il nuovo file vcf con l'header
+grep "#" case452.vcf > candilist452.vcf
+
+
+-Aggiungi al file appena creato le varianti che rispettano il pattern mendeliano
+grep "1/1.*0/1.*0/1" case452.vcf >> candilist452.vcf
+
+
+-Matcha il file con quello delle target regions (stiamo facendo un exome sequencing, valutando quindi solo i coding genes)
+bedtools intersect -a candilist452.vcf -b /home/BCG2022_genomics_exam/targetsPad100.bed -u > 452candilistTG.vcf
+
+
+-Generazione dei file .bg
+bedtools genomecov -ibam case452_father.bam -bg -trackline -trackopts "name="father"" -max 100 > fatherCov.bg
+
+bedtools genomecov -ibam case452_mother.bam -bg -trackline -trackopts "name="mother"" -max 100 > motherCov.bg
+
+bedtools genomecov -ibam case452_child.bam -bg -trackline -trackopts "name="child"" -max 100 > childCov.bg
+
+
+#################
+-VEP
+Upload del file 452candilistTG.vcf
+Usa hg19 (GRCh37)
+Show/hide columns: aggiungi clinical significance, associated phenotypes. A me esce scritto 31 colonne.
+
+VEP filters
+-impact is high
+-phenotype or disease is defined
+
+Se non ottieni nulla metti
+-impact is not low
+-impact is not modifier
+-phenotype or disease is defined
+-SIFT <= 0.2
+-PolyPhen > 0.6
+
+Per discriminare, guarda l'AF: deve essere <0.0001 oppure non essere definito (-) perché stiamo cercando malattie genetiche rare.
+
+
+#################
+-Grafici coverage
+Metti il file .bg e il file TG.vcf
+
+UCSC website -> Mydata -> custom tracks -> Hg19 -> choosefile -> choose format (optional) -> submit.
+You can rename the name of the file clicking on UserTrack (then delete usertrack and put the name you want). 
+-> Go to first annotation
+
+
+################
+-Qualimap, fastqc, multiqc 
+
+
