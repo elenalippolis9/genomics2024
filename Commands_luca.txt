@@ -26,7 +26,7 @@ bcftools query -l case452.vcf | sort > samples.txt
 bcftools view -S samples.txt case452.vcf > case452.sorted.vcf
 
 
--Conta le varianti alleliche di ogni individuo
+-Conta le varianti alleliche di ogni individuo (più per noi credo)
 grep -v "#"  case452.sorted.vcf | cut -f 10 | cut -d ":" -f 1 | sort | uniq -c
 
 grep -v "#"  case452.sorted.vcf | cut -f 11 | cut -d ":" -f 1 | sort | uniq -c
@@ -85,5 +85,14 @@ You can rename the name of the file clicking on UserTrack (then delete usertrack
 
 ################
 -Qualimap, fastqc, multiqc 
+
+qualimap bamqc -bam case452_father.bam -gff /home/BCG2022_genomics_exam/targetsPad100.bed -outdir case452_father
+
+qualimap bamqc -bam case452_mother.bam -gff /home/BCG2022_genomics_exam/targetsPad100.bed -outdir case452_mother
+
+qualimap bamqc -bam case452_child.bam -gff /home/BCG2022_genomics_exam/targetsPad100.bed -outdir case452_child
+
+
+
 
 
