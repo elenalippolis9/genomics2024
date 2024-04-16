@@ -43,7 +43,7 @@ for case_info in "${cases[@]}"; do
 
     # Index BAM files
     for individual in "${individuals[@]}"; do
-   	  samtools index "${case_name}_${individual}.bam"
+   	  samtools index "${directory}/${case_name}_${individual}.bam"
     done
    
 
