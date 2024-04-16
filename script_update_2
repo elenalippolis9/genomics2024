@@ -100,4 +100,6 @@ for case_info in "${cases[@]}"; do
    	
     done
 
+    echo "${case_name} finished."
+
 done
