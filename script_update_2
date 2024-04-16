@@ -37,7 +37,7 @@ for case_info in "${cases[@]}"; do
    # Align reads and create BAM files for each individual 
    
    for individual in "${individuals[@]}"; do
-   	bowtie2 -U "/home/BCG2024_genomics_exam/${case_name}_${individual}.fq.gz" -p 8 -x /home/BCG2024_genomics_exam/uni --rg-id 'SF' --rg "SM:${individual}" | samtools view -Sb | samtools sort -o "working/$case_name/case${case_name}_${individual}.bam"
+   	bowtie2 -U "/home/BCG2024_genomics_exam/${case_name}_${individual}.fq.gz" -p 8 -x /home/BCG2024_genomics_exam/uni --rg-id 'SF' --rg "SM:${individual}" | samtools view -Sb | samtools sort -o "working/$case_name/${case_name}_${individual}.bam"
    done
    
 
