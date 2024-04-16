@@ -17,7 +17,6 @@
 
 cases=("case622 AR" "case717 AD" "case644 AD" "case625 AD" "case743 AD" "case584 AD" "case709 AR" "case600 AR" "case696 AD" "case630 AD")
 for case_info in "${cases[@]}"; do
-    echo "$case_info"
     case_name="${case_info%% *}"  # Extracts the substring before the first space
     case_type="${case_info#* }"   # Extracts the substring after the first space
     individuals=("mother" "father" "child")
@@ -54,8 +53,8 @@ for case_info in "${cases[@]}"; do
 
     # Run QC using qualimap and rename the stats file
     for individual in "${individuals[@]}"; do
-   	  qualimap bamqc -bam "${case_name}_${individual}.bam" -gff /home/BCG2024_genomics_exam/exons16Padded_sorted.bed -outdir "${case_name}_${individual}"
-     	mv "${case_name}_${individual}_stats" "${case_name}_${individual}"
+   	  qualimap bamqc -bam "${directory}/${case_name}_${individual}.bam" -gff /home/BCG2024_genomics_exam/exons16Padded_sorted.bed -outdir "${directory}/${case_name}_${individual}"
+     	mv "${directory}/${case_name}_${individual}_stats" "${directory}/${case_name}_${individual}"
     done
     
 
@@ -63,27 +62,27 @@ for case_info in "${cases[@]}"; do
     multiqc .
 
     # Run FreeBayes to generate VCF
-    nohup freebayes -f /home/BCG2024_genomics_exam/universe.fasta -m 20 -C 5 -Q 10 --min-coverage 10 "${case_name}_child.bam" "${case_name}_father.bam" "${case_name}_mother.bam" > "vcf_files/${case_name}.vcf" &
+    nohup freebayes -f /home/BCG2024_genomics_exam/universe.fasta -m 20 -C 5 -Q 10 --min-coverage 10 "${directory}/${case_name}_child.bam" "${directory}/${case_name}_father.bam" "${directory}/${case_name}_mother.bam" > "${directory}/${case_name}.vcf" &
     wait
 
     # Order the patients in the VCF file to be sure they match the order of the pattern we put for the variants selection
-    bcftools query -l "${case_name}.vcf" | sort > "${case_name}.samples.txt"
-    bcftools view -S "${case_name}.samples.txt" "${case_name}.vcf" > "${case_name}.sorted.vcf"
+    bcftools query -l "${directory}/${case_name}.vcf" | sort > "${directory}/${case_name}.samples.txt"
+    bcftools view -S "${directory}/${case_name}.samples.txt" "${directory}/${case_name}.vcf" > "${directory}/${case_name}.sorted.vcf"
 
     # Show and count the variants of each individual to understand how setting up the segregation patterns
-    grep -v "#"  "${case_name}.sorted.vcf" | cut -f 10 | cut -d ":" -f 1 | sort | uniq -c
-    grep -v "#"  "${case_name}.sorted.vcf" | cut -f 11 | cut -d ":" -f 1 | sort | uniq -c
-    grep -v "#"  "${case_name}.sorted.vcf" | cut -f 12 | cut -d ":" -f 1 | sort | uniq -c
+    grep -v "#"  "${directory}/${case_name}.sorted.vcf" | cut -f 10 | cut -d ":" -f 1 | sort | uniq -c
+    grep -v "#"  "${directory}/${case_name}.sorted.vcf" | cut -f 11 | cut -d ":" -f 1 | sort | uniq -c
+    grep -v "#"  "${directory}/${case_name}.sorted.vcf" | cut -f 12 | cut -d ":" -f 1 | sort | uniq -c
 
     # Select variants based on case type
     if [ "$case_type" == "AR" ]; then
         # Select variants with the recessive pattern
-        grep "^#" "${case_name}.sorted.vcf" > "candilist${case_name}.vcf"
-        grep "1/1.*0/1.*0/1" "${case_name}.sorted.vcf" >> "candilist${case_name}.vcf"
+        grep "^#" "${directory}/${case_name}.sorted.vcf" > "${directory}/candilist${case_name}.vcf"
+        grep "1/1.*0/1.*0/1" "${directory}/${case_name}.sorted.vcf" >> "${directory}/candilist${case_name}.vcf"
     elif [ "$case_type" == "AD" ]; then
         # Select variants with the dominant pattern
-        grep "^#" "${case_name}.vcf" > "candilist${case_name}.vcf"
-        grep -E "(0/1.*0/0.*0/0)" "${case_name}.vcf" >> "candilist${case_name}.vcf"
+        grep "^#" "${directory}/${case_name}.vcf" > "${directory}/candilist${case_name}.vcf"
+        grep -E "(0/1.*0/0.*0/0)" "${directory}/${case_name}.vcf" >> "${directory}/candilist${case_name}.vcf"
     else
         # In case the type (recessive or dominant) is not specified
         echo "Invalid case type: $case_type"
@@ -91,12 +90,12 @@ for case_info in "${cases[@]}"; do
 
     # Generation of the VCF file keeping just the variants included in the target regions (-u serve per riportare le cose una voltaq
     # sola in caso di overlapping exons)
-    grep "^#" "candilist${case_name}.vcf" > "${case_name}candilistTG.vcf"
-    bedtools intersect -a "candilist${case_name}.vcf" -b /home/BCG2024_genomics_exam/exons16Padded_sorted.bed -u >> "${case_name}candilistTG.vcf"
+    grep "^#" "${directory}/candilist${case_name}.vcf" > "${directory}/${case_name}candilistTG.vcf"
+    bedtools intersect -a "${directory}/candilist${case_name}.vcf" -b /home/BCG2024_genomics_exam/exons16Padded_sorted.bed -u >> "${directory}/${case_name}candilistTG.vcf"
 
     #Generate coverage tracks with bedtools genomecov
      for individual in "${individuals[@]}"; do
-     bedtools genomecov -ibam "${case_name}_${individual}.bam" -bg -trackline -trackopts 'name="${individual}"' -max 100 > "${case_name}${individual}Cov.bg"
+     bedtools genomecov -ibam "${directory}/${case_name}_${individual}.bam" -bg -trackline -trackopts 'name="${individual}"' -max 100 > "${directory}/${case_name}${individual}Cov.bg"
    	
     done
 
