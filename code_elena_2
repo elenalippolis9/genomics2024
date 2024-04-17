@@ -18,11 +18,11 @@ for case_info in "${cases[@]}"; do
 
  # Align reads and create BAM files for each individual 
   
-   for individual in "${individuals[@]}"; do
-        bowtie2 -U "/home/BCG2024_genomics_exam/${case_name}_${individual}.fq.gz" -p 8 -x /home/BCG2024_genomics_exam/uni --rg-id 'SF' --rg "SM:${individual}" | samtools view -Sb | samtools sort -o "${directory}/${case_name}_${individual}.bam"
-   done
+        bowtie2 -U "/home/BCG2024_genomics_exam/${case_name}_mother.fq.gz" -p 8 -x /home/BCG2024_genomics_exam/uni --rg-id 'SM' --rg "SM:mother" | samtools view -Sb | samtools sort -o "${directory}/${case_name}_mother.bam"
+        bowtie2 -U "/home/BCG2024_genomics_exam/${case_name}_father.fq.gz" -p 8 -x /home/BCG2024_genomics_exam/uni --rg-id 'SF' --rg "SM:father" | samtools view -Sb | samtools sort -o "${directory}/${case_name}_father.bam"
+        bowtie2 -U "/home/BCG2024_genomics_exam/${case_name}_child.fq.gz" -p 8 -x /home/BCG2024_genomics_exam/uni --rg-id 'SC' --rg "SM:child" | samtools view -Sb | samtools sort -o "${directory}/${case_name}_child.bam"
    
-  
+   
     # Index BAM files
     for individual in "${individuals[@]}"; do
           samtools index "${directory}/${case_name}_${individual}.bam"
@@ -41,12 +41,12 @@ for case_info in "${cases[@]}"; do
     for individual in "${individuals[@]}"; do
           qualimap bamqc -bam "${directory}/${case_name}_${individual}.bam" -gff /home/BCG2024_genomics_exam/exons16Padded_sorted.bed -outdir "${directory}/${case_name}_${individual}"
 
-        # mv "${directory}/${case_name}_${individual}_stats" "${directory}/${case_name}_${individual}"
+         mv "/home/BCG_2024_elippolis/${case_name}_${individual}_stats" "${directory}/${case_name}_${individual}"
     done
     
    
     # Performing multiqc
-    multiqc .
+    multiqc . --filename "${directory}/multiqc_report_${case_name}.html"
 
  # Run FreeBayes to generate VCF
     nohup freebayes -f /home/BCG2024_genomics_exam/universe.fasta -m 20 -C 5 -Q 10 --min-coverage 10 "${directory}/${case_name}_child.bam" "${directory}/${case_name}_father.bam" >
