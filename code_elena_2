@@ -25,15 +25,13 @@ for case_info in "${cases[@]}"; do
    
     # Index BAM files
     for individual in "${individuals[@]}"; do
-          samtools index "${directory}/${case_name}_${individual}.bam"
+   	  samtools index "${directory}/${case_name}_${individual}.bam"
     done
-  
+   
 
-    #Run fastQC
-  
- 
+    #Run fastQC 
     for individual in "${individuals[@]}"; do
-          fastqc "/home/BCG2024_genomics_exam/${case_name}_${individual}.fq.gz" -o ./
+   	  fastqc "/home/BCG2024_genomics_exam/${case_name}_${individual}.fq.gz"
     done
     
    
@@ -49,12 +47,10 @@ for case_info in "${cases[@]}"; do
     multiqc . --filename "${directory}/multiqc_report_${case_name}.html"
 
  # Run FreeBayes to generate VCF
-    nohup freebayes -f /home/BCG2024_genomics_exam/universe.fasta -m 20 -C 5 -Q 10 --min-coverage 10 "${directory}/${case_name}_child.bam" "${directory}/${case_name}_father.bam" >
+    nohup freebayes -f /home/BCG2024_genomics_exam/universe.fasta -m 20 -C 5 -Q 10 --min-coverage 10 "${directory}/${case_name}_child.bam" "${directory}/${case_name}_father.bam" "${directory}/${case_name}_mother.bam" > "${directory}/${case_name}.vcf" &
     wait
  
-   echo "block 7"
     # Order the patients in the VCF file to be sure they match the order of the pattern we put for the variants selection
-   echo "${directory}/${case_name}.vcf"
 
     bcftools query -l "${directory}/${case_name}.vcf" | sort > "${directory}/${case_name}.samples.txt"
     bcftools view -S "${directory}/${case_name}.samples.txt" "${directory}/${case_name}.vcf" > "${directory}/${case_name}.sorted.vcf"
@@ -115,22 +111,13 @@ for case_info in "${cases[@]}"; do
     # sola in caso di overlapping exons)
     grep "^#" "${directory}/candilist${case_name}.vcf" > "${directory}/${case_name}candilistTG.vcf"
     bedtools intersect -a "${directory}/candilist${case_name}.vcf" -b /home/BCG2024_genomics_exam/exons16Padded_sorted.bed -u >> "${directory}/${case_name}candilistTG.vcf"
-   echo "block 11"
-    #Generate coverage tracks with bedtools genomecov
-     for individual in "${individuals[@]}"; do
-     bedtools genomecov -ibam "${directory}/${case_name}_${individual}.bam" -bg -trackline -trackopts 'name="${individual}"' -max 100 > "${directory}/${case_name}${individual}Cov>echo "block 10"
-    # Generation of the VCF file keeping just the variants included in the target regions (-u serve per riportare le cose una voltaq
-    # sola in caso di overlapping exons)
-    grep "^#" "${directory}/candilist${case_name}.vcf" > "${directory}/${case_name}candilistTG.vcf"
-    bedtools intersect -a "${directory}/candilist${case_name}.vcf" -b /home/BCG2024_genomics_exam/exons16Padded_sorted.bed -u >> "${directory}/${case_name}candilistTG.vcf"
-   echo "block 11"
+
     #Generate coverage tracks with bedtools genomecov
      for individual in "${individuals[@]}"; do
      bedtools genomecov -ibam "${directory}/${case_name}_${individual}.bam" -bg -trackline -trackopts 'name="${individual}"' -max 100 > "${directory}/${case_name}${individual}Cov.bg"
-        
+   	
     done
 
     echo "${case_name} finished."
 
-
-
+done
