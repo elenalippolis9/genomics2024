@@ -40,7 +40,7 @@ for case_info in "${cases[@]}"; do
     done
     
     # Performing multiqc
-    multiqc "${directory}" --filename "${directory}/multiqc_report_${case_name}_data/multiqc_report_${case_name}.html"
+    multiqc "${directory}" --filename "${directory}/multiqc_report_${case_name}.html"
 
     # Run FreeBayes to generate VCF
     nohup freebayes -f /home/BCG2024_genomics_exam/universe.fasta -m 20 -C 5 -Q 10 --min-coverage 10 "${directory}/${case_name}_child.bam" "${directory}/${case_name}_father.bam" "${directory}/${case_name}_mother.bam" > "${directory}/${case_name}.vcf" &
