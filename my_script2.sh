@@ -28,13 +28,15 @@ for case_info in "${cases[@]}"; do
     done
    
     #Run fastQC 
+    mkdir "${directory}/fastqc_outputs"
     for individual in "${individuals[@]}"; do
-   	  fastqc "/home/BCG2024_genomics_exam/${case_name}_${individual}.fq.gz" -o "${directory}"
+   	  fastqc "/home/BCG2024_genomics_exam/${case_name}_${individual}.fq.gz" -o "${directory}/fastqc_outputs"
     done
-    
+
+    mkdir "${directory}/qualimap_outputs"
     # Run QC using qualimap and rename the stats file
     for individual in "${individuals[@]}"; do
-          qualimap bamqc -bam "${directory}/${case_name}_${individual}.bam" -gff /home/BCG2024_genomics_exam/exons16Padded_sorted.bed -outdir "${directory}/${case_name}_${individual}"
+          qualimap bamqc -bam "${directory}/${case_name}_${individual}.bam" -gff /home/BCG2024_genomics_exam/exons16Padded_sorted.bed -outdir "${directory}/qualimap_outputs/${case_name}_${individual}"
     done
     
     # Performing multiqc
