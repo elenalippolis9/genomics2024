@@ -68,8 +68,7 @@ for case_info in "${cases[@]}"; do
         echo "Invalid case type: $case_type"
     fi
 
-    # Generation of the VCF file keeping just the variants included in the target regions (-u serve per riportare le cose una voltaq
-    # sola in caso di overlapping exons)
+    # Generation of the VCF file keeping just the variants included in the target regions (-u in case of overlapping regions)
     grep "^#" "${directory}/candilist${case_name}.vcf" > "${directory}/${case_name}candilistTG.vcf"
     bedtools intersect -a "${directory}/candilist${case_name}.vcf" -b /home/BCG2024_genomics_exam/exons16Padded_sorted.bed -u >> "${directory}/${case_name}candilistTG.vcf"
 
