@@ -1,4 +1,6 @@
-MultiQC reports for each case are available at these links  
+#MultiQC
+
+To view the complete MultiQC reports, please visit the links below: 
 
 [case 584](https://elenalippolis9.github.io/genomics2024/Reports/multiqc_report_case584.html) <br>
 [case 600](https://elenalippolis9.github.io/genomics2024/Reports/multiqc_report_case600.html) <br>
