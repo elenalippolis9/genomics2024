@@ -1,5 +1,8 @@
-# Genomics2024
-Genomic's project 
+# From Whole Exome Sequencing to Diagnosis: A Bioinformatic Approach for Autosomal Single-Gene Disorders
+
+
+## Authors
+This project was developed by [Luca Lepore](https://github.com/lulepo99), and [elenalippolis9](https://github.com/elenalippolis9).
 
 [case 584](https://elenalippolis9.github.io/genomics2024/multiqc_report_case584.html) <br>
 [case 600](https://elenalippolis9.github.io/genomics2024/multiqc_report_case600.html) <br>
