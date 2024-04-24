@@ -3,11 +3,12 @@
 
 ## Background
 This project was developed as part of the Genomics course within the Master's degree in Bioinformatics for Computational Genomics 
-at Polimi. The course provided an introduction to unix and human genome, covering the analysis from the FASTQ files and Variant Calling to Variant identification 
+at Unimi. The course provided an introduction into Unix fundamental and human genomics, focusing on the diagnosis of rare genetic diseases. It covered the process from FASTQ file analysis and variant calling to variant identification and coverage analysis. 
 
-## Authors
-This project was developed by [Luca Lepore](https://github.com/lulepo99), and [elenalippolis9](https://github.com/elenalippolis9).
 
 ## Project Overview
-This project aims 
-[Genomics Report]() included in this repository
+This project focused on the identification of autosomal single-gene disorders in a cohort of 10 patient-family trios. Each trio, comprising a patient and their parents, was randomly generated and provided to students. The aim was to apply bioinformatics tools for variant discovery and analysis. For detailed insights, refer to the [Genomics Report]() included in this repository.
+
+
+## Authors
+This project was developed by [Luca Lepore](https://github.com/lulepo99), and [Elena Lippolis](https://github.com/elenalippolis9).
