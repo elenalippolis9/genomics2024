@@ -11,4 +11,4 @@ This project focused on the identification of autosomal single-gene disorders in
 
 
 ## Authors
-This project was developed [Elena Lippolis](https://github.com/elenalippolis9), and [Luca Lepore](https://github.com/lulepo99).
+This project was developed by [Elena Lippolis](https://github.com/elenalippolis9), and [Luca Lepore](https://github.com/lulepo99).
