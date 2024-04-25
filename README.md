@@ -3,7 +3,7 @@
 
 ## Background
 This project was developed as part of the Genomics course within the Master's degree in Bioinformatics for Computational Genomics 
-at Unimi. The course provided an introduction into Unix fundamental and human genomics, focusing on the diagnosis of rare genetic diseases. It covered the process from FASTQ file analysis and variant calling to variant identification and coverage analysis. 
+at Unimi. The course provided an introduction into Unix fundamental and human genomics, focusing on the diagnosis of rare genetic diseases. It covered the analytical process from sequence alignment and preliminary quality assessment to variant identification and coverage analysis. 
 
 
 ## Project Overview
