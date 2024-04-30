@@ -7,7 +7,7 @@ at Unimi. The course provided an introduction into Unix fundamental and human ge
 
 
 ## Project Overview
-This project focused on the identification of autosomal single-gene disorders in a cohort of 10 patient-family trios. Each trio, comprising a patient and their parents, was randomly generated and provided to students. The aim was to apply bioinformatics tools for variant discovery and analysis. The project was based on chromosome 16 only. For detailed insights, refer to the [Genomics Report]() included in this repository.
+This project focused on the identification of autosomal single-gene disorders in a cohort of 10 patient-family trios. Each trio, comprising a patient and their parents, was randomly generated and provided to students. The aim was to apply bioinformatics tools for variant discovery and analysis. The project was based on chromosome 16 only. For detailed insights, refer to the [Genomics Report](https://github.com/elenalippolis9/genomics2024/blob/main/Genomics_Report.pdf) included in this repository.
 
 
 ## Authors
